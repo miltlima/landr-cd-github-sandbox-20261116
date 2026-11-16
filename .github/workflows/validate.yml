@@ -1,0 +1,28 @@
+name: Sandbox validation
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  sandbox-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate synthetic source files at the event revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PYTHON'
+          import base64, json, os, urllib.request
+          for application in ('payments', 'orders'):
+              url = 'https://api.github.com/repos/' + os.environ['SOURCE_REPOSITORY'] + '/contents/environments/dev/' + application + '/release.json?ref=' + os.environ['SOURCE_SHA']
+              request = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json'})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  source = json.load(response)
+              document = json.loads(base64.b64decode(source['content']))
+              assert isinstance(document['softwareVersion'], str)
+              assert document['softwareVersion'].startswith('synthetic-')
+          print('Synthetic sources validated at', os.environ['SOURCE_SHA'])
+          PYTHON
