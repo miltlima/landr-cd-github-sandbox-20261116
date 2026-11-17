@@ -1,4 +1,1 @@
-{
-  "image": "example.invalid/payments@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  "softwareVersion": "synthetic-connector-live-1794931013424576000"
-}
+{"image": "example.invalid/payments@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "softwareVersion": "synthetic-promoted-connector-regression-20261117"}
